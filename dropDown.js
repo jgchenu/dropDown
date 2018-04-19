@@ -24,6 +24,5 @@
     DropDown.prototype.transform = function (dis) {
         this.dropDown.webkitTranform = `translate(0,${dis}px)`;
         this.dropDown.transform = `translate(0,${dis}px)`; 
-        //试一下
     }
 })();
