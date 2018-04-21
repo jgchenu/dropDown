@@ -1,22 +1,36 @@
 ;
 (function () {
     var DropDown = function (dropId = 'dropDwon', distance = 60, callBack = () => {}, tip = '下拉进行加载', loadingTip = '努力加载中...') {
+        //获取下拉元素节点
         this.dropDown = document.getElementById(dropId);
+        //下拉之前的提示
         this.tip = tip;
+        //下拉之后的提示
         this.loadingTip=loadingTip;
+        //下拉之后的回调函数
         this.callBack = callBack;
+        //下拉距离，同时也是提示框的高度
         this.distance = distance;
+        //获取下拉元素的父节点
         this.parentEle = this.dropDown.parentNode;
+        //提示框节点
         this.tipDiv = null;
         this.isLock = false;
+        //这两个变量的作用在于防止二次滑动，在第一次滑动没有达到指定距离而触发回调的时候，会强制进行回弹，此时isLock被设置为fasle，防止二次滑动。
+        //滑动后数据加载完成之前不允许有第二次的滑动，避免来触发第二次的回调函数。故而isDone是用来控制触发回调的状态的，isDOne为true时候，证明还没有触发回调，可以进行滑动，当触发回调之后，会将isDone设置为fasle，在回调完成前，禁止进行滑动，进而再次触发回调。
+        //如果滑动不到距离，那么会将状态复原，如果滑动到达需要距离，那么会进行回调事件次数调用的限制，然后在回调完成后再进行复原。
         this.isDone = false;
         this.startPoint = null;
         this.movePoint = null;
-        this.endPoint = null;
+        //初始化提示框元素
         this.initEle();
+        //初始化提示框样式
         this.initCss();
+        //绑定手指触摸开始事件
         this.dropDown.addEventListener('touchstart', this.touchStart.bind(this), false);
+        //绑定手指移动事件
         this.dropDown.addEventListener('touchmove', this.touchMove.bind(this), false);
+        //绑定手指触摸结束事件
         this.dropDown.addEventListener('touchend', this.touchEnd.bind(this), false);
     }
     DropDown.prototype.initEle = function () {
